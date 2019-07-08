@@ -2,7 +2,7 @@ var Benchmark = require('benchmark');
 var suite = new Benchmark.Suite;
 var mongodbCollectionName='testrecord1'
 var mongooseCollectionName='testrecord2'
-
+require('dotenv').config();
 var mongoose = require('mongoose')
 const MongoClient = require('mongodb').MongoClient;
 var record = {
@@ -11,8 +11,8 @@ var record = {
 	job: 'Useless'
 }
 Promise.all([
-	mongoose.connect('mongodb://talknonymous.local:27017/mongoose-vs-mongodb'),
-	MongoClient.connect('mongodb://talknonymous.local:27017')	
+	mongoose.connect(process.env.DATABASE_URL,{useNewUrlParser: true }),
+	MongoClient.connect(process.env.DATABASE_URL,{useNewUrlParser:true})	
 ]).then((clients) => {
 	var db = mongoose.connection;
 	var Schema = mongoose.Schema;
@@ -22,7 +22,7 @@ Promise.all([
 		job: String
 	});
 	var recordModel = mongoose.model(mongooseCollectionName, recordSchema);
-	var nativeCollection = clients[1].db('mongoose-vs-mongodb').collection(mongodbCollectionName)
+	var nativeCollection = clients[1].db().collection(mongodbCollectionName)
 	suite
 	.add('Mongoose', {
 		defer: true,
@@ -50,6 +50,4 @@ Promise.all([
   		console.log('Fastest is ' + this.filter('fastest').map('name'));
 	})
 	.run({ 'async': true });
-
-
 })

@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.0.7",
-    "benchmark": "^2.1.4"
+    "mongoose": "^5.5.2",
+    "mongodb": "^3.2.2",
+    "benchmark": "^2.1.4",
+    "dotenv": "latest"
   }
 }

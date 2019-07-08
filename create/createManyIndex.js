@@ -1,13 +1,13 @@
 var Benchmark = require('benchmark');
 var suite = new Benchmark.Suite;
-
+require('dotenv').config();
 var mongoose = require('mongoose')
 const MongoClient = require('mongodb').MongoClient;
 var collectionMongoose = 'testrecord1';
 var collectionMongodb = 'testrecord2';
 Promise.all([
-	mongoose.connect('mongodb://talknonymous.local:27017/mongoose-vs-mongodb'),
-	MongoClient.connect('mongodb://talknonymous.local:27017')	
+	mongoose.connect(process.env.DATABASE_URL,{useNewUrlParser: true }),
+	MongoClient.connect(process.env.DATABASE_URL,{useNewUrlParser:true})	
 ]).then((clients) => {
 	var db = mongoose.connection;
 	var Schema = mongoose.Schema;
@@ -18,7 +18,7 @@ Promise.all([
 	});
 	recordSchema.path('name').index({text: true})
 	var recordModel = mongoose.model(collectionMongoose, recordSchema);
-	var nativeCollection = clients[1].db('mongoose-vs-mongodb').collection(collectionMongodb)
+	var nativeCollection = clients[1].db().collection(collectionMongodb)
 	suite
 	.add('Mongoose', {
 		defer: true,
